@@ -39,7 +39,7 @@ internal final class FeedItemsMapper {
             Root.self,
             from: data
         ) else {
-            return .failure(.invalidData)
+            return .failure(RemoteFeedLoader.Error.invalidData)
         }
     
         return .success(root.feed)
