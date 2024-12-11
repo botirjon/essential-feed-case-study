@@ -17,6 +17,7 @@ public protocol FeedStore {
         timestamp: Date,
         completion: @escaping InsertionCompletion
     )
+    func retreive()
 }
 
 
