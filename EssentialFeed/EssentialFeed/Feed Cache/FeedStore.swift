@@ -10,6 +10,7 @@ import Foundation
 public protocol FeedStore {
     typealias DeletionCompletion = (Error?) -> Void
     typealias InsertionCompletion = (Error?) -> Void
+    typealias RetreiveCompletion = (Error?) -> Void
     
     func deleteCachedFeed(completion: @escaping DeletionCompletion)
     func insert(
@@ -17,7 +18,7 @@ public protocol FeedStore {
         timestamp: Date,
         completion: @escaping InsertionCompletion
     )
-    func retreive()
+    func retreive(completion: @escaping RetreiveCompletion)
 }
 
 
