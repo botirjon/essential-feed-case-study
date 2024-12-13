@@ -31,6 +31,7 @@
 		60FB1B592D0A14A400277A50 /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FB1B582D0A149E00277A50 /* SharedTestHelpers.swift */; };
 		60FB1B5A2D0A14A400277A50 /* SharedTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FB1B582D0A149E00277A50 /* SharedTestHelpers.swift */; };
 		60FB1B5C2D0B66DD00277A50 /* FeedCachePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FB1B5B2D0B66DD00277A50 /* FeedCachePolicy.swift */; };
+		60FB1B602D0C60C500277A50 /* CodableFeedStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FB1B5F2D0C60C000277A50 /* CodableFeedStoreTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +79,7 @@
 		60FB1B562D0A13B700277A50 /* FeedCacheTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCacheTestHelpers.swift; sourceTree = "<group>"; };
 		60FB1B582D0A149E00277A50 /* SharedTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedTestHelpers.swift; sourceTree = "<group>"; };
 		60FB1B5B2D0B66DD00277A50 /* FeedCachePolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedCachePolicy.swift; sourceTree = "<group>"; };
+		60FB1B5F2D0C60C000277A50 /* CodableFeedStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableFeedStoreTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -197,6 +199,7 @@
 		60FB1B412D08C09C00277A50 /* Feed Cache */ = {
 			isa = PBXGroup;
 			children = (
+				60FB1B5F2D0C60C000277A50 /* CodableFeedStoreTests.swift */,
 				60FB1B512D09C16F00277A50 /* Helpers */,
 				60FB1B422D08C0F700277A50 /* CacheFeedUseCaseTests.swift */,
 				60FB1B4F2D09C08E00277A50 /* LoadFeedFromCacheUseCaseTests.swift */,
@@ -388,6 +391,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60FB1B602D0C60C500277A50 /* CodableFeedStoreTests.swift in Sources */,
 				60FB1B572D0A13BE00277A50 /* FeedCacheTestHelpers.swift in Sources */,
 				60FB1B552D0A0D5700277A50 /* ValidateFeedCacheUseCaseTests.swift in Sources */,
 				60D364BA2D04DF8100D823BF /* LoadFeedFromRemoteUseCaseTests.swift in Sources */,
