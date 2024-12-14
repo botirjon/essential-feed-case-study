@@ -40,6 +40,7 @@
 		60FB1B6E2D0DA6E100277A50 /* XCTestCase+FailableDeleteFeedStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FB1B6D2D0DA6D500277A50 /* XCTestCase+FailableDeleteFeedStoreSpecs.swift */; };
 		60FB1B702D0DB1EE00277A50 /* CoreDataFeedStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FB1B6F2D0DB1EE00277A50 /* CoreDataFeedStoreTests.swift */; };
 		60FB1B752D0DF80700277A50 /* FeedStore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 60FB1B732D0DF80700277A50 /* FeedStore.xcdatamodeld */; };
+		60FB1B772D0DF95B00277A50 /* CoreDataFeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60FB1B762D0DF95600277A50 /* CoreDataFeedStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,6 +97,7 @@
 		60FB1B6D2D0DA6D500277A50 /* XCTestCase+FailableDeleteFeedStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+FailableDeleteFeedStoreSpecs.swift"; sourceTree = "<group>"; };
 		60FB1B6F2D0DB1EE00277A50 /* CoreDataFeedStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataFeedStoreTests.swift; sourceTree = "<group>"; };
 		60FB1B742D0DF80700277A50 /* FeedStore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FeedStore.xcdatamodel; sourceTree = "<group>"; };
+		60FB1B762D0DF95600277A50 /* CoreDataFeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataFeedStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -233,6 +235,7 @@
 		60FB1B442D08D80100277A50 /* Feed Cache */ = {
 			isa = PBXGroup;
 			children = (
+				60FB1B762D0DF95600277A50 /* CoreDataFeedStore.swift */,
 				60FB1B612D0D6FD900277A50 /* CodableFeedStore.swift */,
 				60FB1B452D08D81100277A50 /* LocalFeedLoader.swift */,
 				60FB1B472D08D8AB00277A50 /* FeedStore.swift */,
@@ -403,6 +406,7 @@
 				60FB1B4A2D098C8000277A50 /* RemoteFeedItem.swift in Sources */,
 				60FB1B5C2D0B66DD00277A50 /* FeedCachePolicy.swift in Sources */,
 				60D364652CFE0CF500D823BF /* RemoteFeedLoader.swift in Sources */,
+				60FB1B772D0DF95B00277A50 /* CoreDataFeedStore.swift in Sources */,
 				60FB1B4C2D098CBE00277A50 /* LocalFeedImage.swift in Sources */,
 				60FB1B482D08D8AB00277A50 /* FeedStore.swift in Sources */,
 				60FB1B462D08D81100277A50 /* LocalFeedLoader.swift in Sources */,
