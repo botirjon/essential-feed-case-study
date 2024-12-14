@@ -67,12 +67,16 @@ class CodableFeedStore {
         timestamp: Date,
         completion: @escaping FeedStore.InsertionCompletion
     ) {
-        let encoder = JSONEncoder()
-        let encoded = try! encoder.encode(
-            Cache(feed: feed.map { CodableFeedImage($0) }, timestamp: timestamp)
-        )
-        try! encoded.write(to: storeURL)
-        completion(nil)
+        do {
+            let encoder = JSONEncoder()
+            let encoded = try! encoder.encode(
+                Cache(feed: feed.map { CodableFeedImage($0) }, timestamp: timestamp)
+            )
+            try encoded.write(to: storeURL)
+            completion(nil)
+        } catch {
+            completion(error)
+        }
     }
 }
 
@@ -169,6 +173,17 @@ class CodableFeedStoreTests: XCTestCase {
             sut,
             toRetrieve: .found(feed: latestFeed, timestamp: latestTimestamp)
         )
+    }
+    
+    func test_insert_deliversFailureOnInsertionError() {
+        let invalidStoreURL = URL(string: "invalid://store-url")!
+        let sut = makeSUT(storeURL: invalidStoreURL)
+        let feed = uniqueImageFeed().local
+        let timestamp = Date()
+        
+        let insertionError = insert((feed, timestamp), to: sut)
+                
+        XCTAssertNotNil(insertionError)
     }
     
     // MARK: - Helpers
