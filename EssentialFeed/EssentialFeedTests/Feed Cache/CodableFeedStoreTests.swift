@@ -31,7 +31,7 @@ class CodableFeedStoreTests: XCTestCase, FailableFeedStoreSpecs {
     func test_retreive_hasNoSideEffectsOnEmptyCache() {
         let sut = makeSUT()
         
-        expect(sut, toRetrieveTwice: .empty)
+        expect(sut, toRetrieveTwice: .success(.empty))
         assertThatRetrieveHasNoSideEffectsOnEmptyCache(on: sut)
     }
     
