@@ -72,7 +72,13 @@ final class EssentialFeedCacheIntegrationTests: XCTestCase {
         sut.load { result in
             switch result {
                 case let .success(imageFeed):
-                    XCTAssertEqual([], imageFeed, "Expected empty feed", file: file, line: line)
+                    XCTAssertEqual(
+                        expectedFeed,
+                        imageFeed,
+                        "Expected empty feed",
+                        file: file,
+                        line: line
+                    )
                     
                 case let .failure(error):
                     XCTFail("Expected successful feed result, got \(error) instead", file: file, line: line)
