@@ -8,39 +8,7 @@
 import XCTest
 import UIKit
 import EssentialFeed
-
-final class FeedViewController: UITableViewController {
-    var loader: FeedLoader?
-    
-    convenience init(loader: FeedLoader) {
-        self.init()
-        self.loader = loader
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        refreshControl = UIRefreshControl()
-        refreshControl?
-            .addTarget(self, action: #selector(load), for: .valueChanged)
-        
-        self.load()
-    }
-    
-    @objc private func load() {
-        self.refreshControl?.beginRefreshing()
-        loader?.load { [weak self] _ in
-            self?.refreshControl?.endRefreshing()
-        }
-    }
-    
-    private func beginRefreshing() {
-        if let refreshControl = self.refreshControl {
-            refreshControl.beginRefreshing()
-            let offset = CGPoint(x: 0, y: -refreshControl.frame.size.height)
-            tableView.setContentOffset(offset, animated: true)
-        }
-    }
-}
+import EssentialFeediOS
 
 final class FeedViewControllerTests: XCTestCase {
     func test_loadFeedActions_requestsFeedFromLoader() {
