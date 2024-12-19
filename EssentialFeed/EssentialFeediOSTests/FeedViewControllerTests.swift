@@ -444,7 +444,7 @@ private extension FeedViewController {
         
         let ds = tableView.prefetchDataSource
         let index = IndexPath(row: row, section: feedImagesSection)
-        ds?.tableView?(tableView, cancelPrefetchingForRowsAt: [IndexPath(row: row, section: feedImagesSection)])
+        ds?.tableView?(tableView, cancelPrefetchingForRowsAt: [index])
     }
 }
 
@@ -517,12 +517,12 @@ private class FakeRefreshControl: UIRefreshControl {
 extension UIImage {
     static func make(withColor color: UIColor = .red) -> UIImage {
         let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
-        let renderer = UIGraphicsImageRenderer(bounds: rect)
-        let image = renderer.image { context in
-            color.setFill()
-            context.fill(rect)
-        }
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
         
-        return image
+        return UIGraphicsImageRenderer(size: rect.size, format: format).image { rendererContext in
+            color.setFill()
+            rendererContext.fill(rect)
+        }
     }
 }
