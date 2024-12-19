@@ -127,6 +127,50 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(view1?.isShowingImageLoadingIndicator, false)
     }
     
+    func test_feedImageView_rendersImageLoadedFromURL() {
+        let (sut, loader) = makeSUT()
+        
+        sut.simulateViewAppearance()
+        loader.completeFeedLoading(with: [makeImage(), makeImage()])
+        
+        let view0 = sut.simulateFeedImageVisible(at: 0)
+        let view1 = sut.simulateFeedImageVisible(at: 1)
+        
+        XCTAssertEqual(view0?.renderedImage, .none)
+        XCTAssertEqual(view1?.renderedImage, .none)
+        
+        let imageData0 = UIImage.make(withColor: .red).pngData()!
+        loader.completeImageLoading(with: imageData0, at: 0)
+        XCTAssertEqual(view0?.renderedImage?.count, imageData0.count)
+        XCTAssertEqual(view1?.renderedImage, .none)
+        
+        let imageData1 = UIImage.make(withColor: .green).pngData()!
+        loader.completeImageLoading(with: imageData1, at: 1)
+        XCTAssertEqual(view0?.renderedImage?.count, imageData0.count)
+        XCTAssertEqual(view1?.renderedImage?.count, imageData1.count)
+    }
+    
+    func test_feedImageViewRetryButton_isVisibleOnImageURLLoadError() {
+        let (sut, loader) = makeSUT()
+        
+        sut.simulateViewAppearance()
+        loader.completeFeedLoading(with: [makeImage(), makeImage()])
+        
+        let view0 = sut.simulateFeedImageVisible(at: 0)
+        let view1 = sut.simulateFeedImageVisible(at: 1)
+        XCTAssertEqual(view0?.isShowingRetryButton, false)
+        XCTAssertEqual(view1?.isShowingRetryButton, false)
+        
+        let imageData0 = UIImage.make(withColor: .red).pngData()!
+        loader.completeImageLoading(with: imageData0, at: 0)
+        XCTAssertEqual(view0?.isShowingRetryButton, false)
+        XCTAssertEqual(view1?.isShowingRetryButton, false)
+        
+        loader.completeImageLoadingWithError(at: 1)
+        XCTAssertEqual(view0?.isShowingRetryButton, false)
+        XCTAssertEqual(view1?.isShowingRetryButton, true)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (
@@ -330,6 +374,14 @@ private extension FeedImageCell {
     var descriptionText: String? {
         return descriptionLabel.text
     }
+    
+    var renderedImage: Data? {
+        return feedImageView.image?.pngData()
+    }
+    
+    var isShowingRetryButton: Bool {
+        return !retryButton.isHidden
+    }
 }
 
 private extension UIRefreshControl {
@@ -354,5 +406,18 @@ private class FakeRefreshControl: UIRefreshControl {
     
     override func endRefreshing() {
         _isRefreshing = false
+    }
+}
+
+extension UIImage {
+    static func make(withColor color: UIColor = .red) -> UIImage {
+        let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
+        let renderer = UIGraphicsImageRenderer(bounds: rect)
+        let image = renderer.image { context in
+            color.setFill()
+            context.fill(rect)
+        }
+        
+        return image
     }
 }
