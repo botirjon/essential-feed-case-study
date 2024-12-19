@@ -9,9 +9,13 @@ import UIKit
 import EssentialFeed
 
 public final class FeedViewController: UITableViewController, UITableViewDataSourcePrefetching {
-    private var feedLoader: FeedLoader?
+    private var refreshController: FeedRefreshViewController?
     private var imageLoader: FeedImageDataLoader?
-    private var tableModel = [FeedImage]()
+    private var tableModel = [FeedImage]() {
+        didSet {
+            tableView.reloadData()
+        }
+    }
     private var tasks = [IndexPath: FeedImageDataLoaderTask]()
     private var viewAppeared: Bool = false
     
@@ -20,42 +24,25 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
         imageLoader: FeedImageDataLoader
     ) {
         self.init()
-        self.feedLoader = feedLoader
+        self.refreshController = FeedRefreshViewController(feedLoader: feedLoader)
         self.imageLoader = imageLoader
     }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        refreshControl = refreshController?.view
         tableView.prefetchDataSource = self
-        refreshControl = UIRefreshControl()
-        refreshControl?
-            .addTarget(self, action: #selector(load), for: .valueChanged)
+        
+        refreshController?.onRefresh = { [weak self] feed in
+            self?.tableModel = feed
+        }
     }
     
     public override func viewIsAppearing(_ animated: Bool) {
         super.viewIsAppearing(animated)
         if !viewAppeared {
-            self.load()
+            self.refreshController?.refresh()
             viewAppeared = true
-        }
-    }
-    
-    @objc private func load() {
-        self.refreshControl?.beginRefreshing()
-        feedLoader?.load { [weak self] result in
-            if let feed = try? result.get() {
-                self?.tableModel = feed
-                self?.tableView.reloadData()
-            }
-            self?.refreshControl?.endRefreshing()
-        }
-    }
-    
-    private func beginRefreshing() {
-        if let refreshControl = self.refreshControl {
-            refreshControl.beginRefreshing()
-            let offset = CGPoint(x: 0, y: -refreshControl.frame.size.height)
-            tableView.setContentOffset(offset, animated: true)
         }
     }
     
