@@ -185,6 +185,35 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(view?.isShowingRetryButton, true)
     }
     
+    func test_feedImageViewRetryButton_retriesImageLoad() {
+        let image0 = makeImage(url: URL(string: "http://url-0.com")!)
+        let image1 = makeImage(url: URL(string: "http://url-1.com")!)
+        let (sut, loader) = makeSUT()
+        
+        sut.simulateViewAppearance()
+        loader.completeFeedLoading(with: [image0, image1])
+        
+        let view0 = sut.simulateFeedImageVisible(at: 0)
+        let view1 = sut.simulateFeedImageVisible(at: 1)
+        XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url])
+        
+        loader.completeImageLoadingWithError(at: 0)
+        loader.completeImageLoadingWithError(at: 1)
+        XCTAssertEqual(loader.loadedImageURLs, [image0.url, image1.url])
+        
+        view0?.simulateRetryAction()
+        XCTAssertEqual(
+            loader.loadedImageURLs,
+            [image0.url, image1.url, image0.url]
+        )
+        
+        view1?.simulateRetryAction()
+        XCTAssertEqual(
+            loader.loadedImageURLs,
+            [image0.url, image1.url, image0.url, image1.url]
+        )
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (
@@ -395,6 +424,21 @@ private extension FeedImageCell {
     
     var isShowingRetryButton: Bool {
         return !retryButton.isHidden
+    }
+    
+    func simulateRetryAction() {
+        self.retryButton.simulateTouchUpInside()
+    }
+}
+
+private extension UIButton {
+    func simulateTouchUpInside() {
+        allTargets.forEach({ target in
+            actions(forTarget: target, forControlEvent: .touchUpInside)?
+                .forEach({
+                    (target as NSObject).perform(Selector($0))
+                })
+        })
     }
 }
 
