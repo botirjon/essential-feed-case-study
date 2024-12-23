@@ -17,16 +17,13 @@ public final class FeedUIComposer {
         feedLoader: FeedLoader,
         imageLoader: FeedImageDataLoader
     ) -> FeedViewController {
-        let feedViewModel = FeedViewModel(feedLoader: feedLoader)
-        let refreshController = FeedRefreshViewController(
-            viewModel: feedViewModel
-        )
-        let feedController = FeedViewController(
-            refreshController: refreshController
-        )
-        feedViewModel.onFeedLoad = adaptFeedToCellControllers(
-            forwardingTo: feedController,
-            loader: imageLoader
+        let presenter = FeedPresenter(feedLoader: feedLoader)
+        let refreshController = FeedRefreshViewController(presenter: presenter)
+        let feedController = FeedViewController(refreshController: refreshController)
+        presenter.loadingView = WeakRefVirtualProxy(refreshController)
+        presenter.feedView = FeedViewAdapter(
+            controller: feedController,
+            imageLoader: imageLoader
         )
         return feedController
     }
@@ -46,5 +43,43 @@ public final class FeedUIComposer {
                     )
                 }
         }
+    }
+}
+
+private final class WeakRefVirtualProxy<T: AnyObject> {
+    private weak var object: T?
+    
+    init(_ object: T) {
+        self.object = object
+    }
+}
+
+extension WeakRefVirtualProxy: FeedLoadingView where T: FeedLoadingView {
+    func display(isLoading: Bool) {
+        object?.display(isLoading: isLoading)
+    }
+}
+
+private final class FeedViewAdapter: FeedView {
+    
+    private weak var controller: FeedViewController?
+    private let imageLoader: FeedImageDataLoader
+    
+    init(controller: FeedViewController, imageLoader: FeedImageDataLoader) {
+        self.controller = controller
+        self.imageLoader = imageLoader
+    }
+    
+    func display(feed: [FeedImage]) {
+        controller?.tableModel = feed
+            .map {
+                FeedImageCellController(
+                    viewModel: FeedImageViewModel<UIImage>(
+                        model: $0,
+                        imageLoader: imageLoader,
+                        imageTransformer: UIImage.init
+                    )
+                )
+            }
     }
 }
