@@ -247,6 +247,18 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(loader.cancelledImageURLs, [image0.url, image1.url])
     }
     
+    func test_feedImageView_doesNotRenderLoadedImageWhenNotVisibleAnymore() {
+        let (sut, loader) = makeSUT()
+        sut.simulateViewAppearance()
+        loader.completeFeedLoading(with: [makeImage()])
+        
+        let view = sut.simulateFeedImageViewNotVisible(at: 0)
+        loader
+            .completeImageLoading(with: anyImageData())
+        
+        XCTAssertNil(view?.renderedImage, "Expected no rendered image when an image load finishes after the view is not visible anymore")
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (
@@ -318,6 +330,10 @@ final class FeedViewControllerTests: XCTestCase {
             location: location,
             url: url
         )
+    }
+    
+    private func anyImageData() -> Data {
+        return UIImage.make(withColor: .red).pngData()!
     }
     
     // MARK: - LoaderSpy
@@ -425,12 +441,14 @@ private extension FeedViewController {
         return feedImageView(at: index) as? FeedImageCell
     }
     
-    func simulateFeedImageViewNotVisible(at index: Int) {
+    @discardableResult
+    func simulateFeedImageViewNotVisible(at index: Int) -> FeedImageCell? {
         let view = simulateFeedImageVisible(at: index)
         
         let delegate = tableView.delegate
         let indexPath = IndexPath(row: index, section: feedImagesSection)
         delegate?.tableView?(tableView, didEndDisplaying: view!, forRowAt: indexPath)
+        return view
     }
     
     func simulateFeedImageViewNearVisible(at row: Int = 0) {
@@ -470,11 +488,11 @@ private extension FeedImageCell {
     }
     
     var isShowingRetryButton: Bool {
-        return !retryButton.isHidden
+        return !feedImageRetryButton.isHidden
     }
     
     func simulateRetryAction() {
-        self.retryButton.simulateTouchUpInside()
+        self.feedImageRetryButton.simulateTouchUpInside()
     }
 }
 
