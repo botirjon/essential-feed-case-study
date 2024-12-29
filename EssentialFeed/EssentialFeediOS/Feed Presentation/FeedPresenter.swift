@@ -5,18 +5,11 @@
 //  Created by Botirjon Nasridinov on 23/12/24.
 //
 
+import Foundation
 import EssentialFeed
-
-struct FeedLoadingViewModel {
-    let isLoading: Bool
-}
 
 protocol FeedLoadingView {
     func display(viewModel: FeedLoadingViewModel)
-}
-
-struct FeedViewModel {
-    let feed: [FeedImage]
 }
 
 protocol FeedView {
@@ -33,7 +26,12 @@ final class FeedPresenter {
     }
     
     static var title: String {
-        return "My Feed"
+        return NSLocalizedString(
+            "FEED_VIEW_TITLE",
+            tableName: "Feed",
+            bundle: Bundle(for: FeedPresenter.self),
+            comment: "Title for the feed view"
+        )
     }
     
     func didStartLoadingFeed() {
