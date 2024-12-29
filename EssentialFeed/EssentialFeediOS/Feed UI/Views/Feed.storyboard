@@ -124,6 +124,7 @@
                         <connections>
                             <outlet property="dataSource" destination="vIO-aB-713" id="TUj-74-15p"/>
                             <outlet property="delegate" destination="vIO-aB-713" id="kWR-9h-yBY"/>
+                            <outlet property="prefetchDataSource" destination="vIO-aB-713" id="27I-pF-sGu"/>
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="My Feed" id="E42-tt-V7P"/>
