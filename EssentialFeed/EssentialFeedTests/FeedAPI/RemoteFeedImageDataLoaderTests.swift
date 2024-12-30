@@ -111,7 +111,7 @@ final class RemoteFeedImageDataLoaderTests: XCTestCase {
             sut,
             toCompleteWith: failure(.invalidData)
         ) {
-            client.complete(withStatusCode: 400, data: self.anyData())
+            client.complete(withStatusCode: 400, data: anyData())
         }
     }
     
@@ -235,10 +235,6 @@ final class RemoteFeedImageDataLoaderTests: XCTestCase {
         action()
         
         wait(for: [exp], timeout: 1.0)
-    }
-    
-    private func anyData() -> Data {
-        return Data("any data".utf8)
     }
     
     private func failure(_ error: RemoteFeedImageDataLoader.Error) -> FeedImageDataLoader.Result {
