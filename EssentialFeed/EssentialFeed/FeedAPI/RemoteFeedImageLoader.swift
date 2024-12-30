@@ -16,6 +16,7 @@ public class RemoteFeedImageDataLoader: FeedImageDataLoader {
     
     public enum Error: Swift.Error {
         case invalidData
+        case connectivity
     }
     
     private final class HTTPTaskWrapper: FeedImageDataLoaderTask {
@@ -57,8 +58,8 @@ public class RemoteFeedImageDataLoader: FeedImageDataLoader {
                         task.complete(with: .failure(Error.invalidData))
                     }
                     
-                case let .failure(error):
-                    task.complete(with: .failure(error))
+                case .failure:
+                    task.complete(with: .failure(Error.connectivity))
             }
         }
         
