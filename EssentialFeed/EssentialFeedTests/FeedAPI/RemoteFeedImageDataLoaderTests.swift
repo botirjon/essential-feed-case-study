@@ -9,7 +9,6 @@ import XCTest
 import EssentialFeed
 
 class RemoteFeedImageDataLoader {
-    typealias Result = Swift.Result<Data, Swift.Error>
     let client: HTTPClient
     
     init(client: HTTPClient) {
@@ -22,7 +21,7 @@ class RemoteFeedImageDataLoader {
     
     func loadImageData(
         from url: URL,
-        completion: @escaping (Result) -> Void
+        completion: @escaping (FeedImageDataLoader.Result) -> Void
     ) {
         client.get(from: url) { result in
             switch result {
@@ -93,7 +92,6 @@ final class RemoteFeedImageDataLoaderTests: XCTestCase {
         })
     }
 
-    
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: RemoteFeedImageDataLoader, client: HTTPClientSpy) {
@@ -106,7 +104,7 @@ final class RemoteFeedImageDataLoaderTests: XCTestCase {
     
     private func expect(
         _ sut: RemoteFeedImageDataLoader,
-        toCompleteWith expectedResult: RemoteFeedImageDataLoader.Result,
+        toCompleteWith expectedResult: FeedImageDataLoader.Result,
         when action: @escaping () -> Void,
         file: StaticString = #filePath, line: UInt = #line
     ) {
@@ -159,7 +157,7 @@ final class RemoteFeedImageDataLoaderTests: XCTestCase {
         return Data("any data".utf8)
     }
     
-    private func failure(_ error: RemoteFeedImageDataLoader.Error) -> RemoteFeedImageDataLoader.Result {
+    private func failure(_ error: RemoteFeedImageDataLoader.Error) -> FeedImageDataLoader.Result {
         return .failure(error)
     }
     
