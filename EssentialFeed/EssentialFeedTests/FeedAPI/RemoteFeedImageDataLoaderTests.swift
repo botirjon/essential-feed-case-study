@@ -19,11 +19,20 @@ class RemoteFeedImageDataLoader {
         case invalidData
     }
     
+    private struct HTTPTaskWrapper: FeedImageDataLoaderTask {
+        let wrapped: HTTPClientTask
+        
+        func cancel() {
+            wrapped.cancel()
+        }
+    }
+    
+    @discardableResult
     func loadImageData(
         from url: URL,
         completion: @escaping (FeedImageDataLoader.Result) -> Void
-    ) {
-        client.get(from: url) { [weak self] result in
+    ) -> FeedImageDataLoaderTask {
+        let task = client.get(from: url) { [weak self] result in
             guard self != nil else { return }
             switch result {
                 case let .success((data, response)):
@@ -37,6 +46,8 @@ class RemoteFeedImageDataLoader {
                     completion(.failure(error))
             }
         }
+        
+        return HTTPTaskWrapper(wrapped: task)
     }
 }
 
@@ -193,16 +204,20 @@ final class RemoteFeedImageDataLoaderTests: XCTestCase {
     
     private class HTTPClientSpy: HTTPClient {
         
-        struct Message {
-            let url: URL
-            let completion: (HTTPClient.Result) -> Void
+        private struct Task: HTTPClientTask {
+            func cancel() {
+                
+            }
         }
         
-        var requestedURLs: [URL] { messages.map { $0.url } }
-        var messages = [Message]()
+        private var messages = [(url: URL, completion: (HTTPClient.Result) -> Void)]()
+        private(set) var cancelledURLs = [URL]()
         
-        func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
-            messages.append(Message(url: url, completion: completion))
+        var requestedURLs: [URL] { messages.map { $0.url } }
+        
+        func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) -> HTTPClientTask {
+            messages.append((url, completion))
+            return Task()
         }
         
         func complete(with error: NSError, at index: Int = 0) {
