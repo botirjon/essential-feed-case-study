@@ -6,10 +6,28 @@
 //
 
 import XCTest
+import EssentialFeed
 
-private final class LocalFeedImageDataLoader {
+protocol FeedImageDataStore {
+    func retreive(dataForURL url: URL)
+}
+
+private final class LocalFeedImageDataLoader: FeedImageDataLoader {
     
-    init(store: Any) {}
+    private struct Task: FeedImageDataLoaderTask {
+        func cancel() {}
+    }
+    
+    let store: FeedImageDataStore
+    
+    init(store: FeedImageDataStore) {
+        self.store = store
+    }
+    
+    func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> any FeedImageDataLoaderTask {
+        store.retreive(dataForURL: url)
+        return Task()
+    }
 }
 
 final class LocalFeedImageDataLoaderTests: XCTestCase {
@@ -18,6 +36,15 @@ final class LocalFeedImageDataLoaderTests: XCTestCase {
         let (_, store) = makeSUT()
         
         XCTAssertTrue(store.receivedMessages.isEmpty)
+    }
+    
+    func test_loadImageDataFromURL_requestsStoredDataForURL() {
+        let (sut, store) = makeSUT()
+        let url = anyURL()
+        
+        _ = sut.loadImageData(from: url) { _ in }
+        
+        XCTAssertEqual(store.receivedMessages, [.retreive(dataFor: url)])
     }
     
     // MARK: - Helpers
@@ -33,7 +60,16 @@ final class LocalFeedImageDataLoaderTests: XCTestCase {
         return (sut, store)
     }
     
-    private class FeedImageDataStoreSpy {
-        var receivedMessages = [Any]()
+    private class FeedImageDataStoreSpy: FeedImageDataStore {
+        
+        enum Message: Equatable {
+            case retreive(dataFor: URL)
+        }
+        
+        var receivedMessages = [Message]()
+        
+        func retreive(dataForURL url: URL) {
+            receivedMessages.append(.retreive(dataFor: url))
+        }
     }
 }
