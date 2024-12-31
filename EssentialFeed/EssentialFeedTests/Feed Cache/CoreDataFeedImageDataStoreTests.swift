@@ -28,6 +28,18 @@ final class CoreDataFeedImageDataStoreTests: XCTestCase {
         expect(sut, toCompleteWith: notFound(), for: nonMatchingURL)
     }
     
+    func test_retrieveImageData_deliversFoundDataWhenThereIsAStoredImageDataMatchingURL() {
+        let sut = makeSUT()
+        
+        let matchingURL = URL(string: "https://a-url.com")!
+        
+        let data = anyData()
+        
+        insert(data, for: matchingURL, into: sut)
+        
+        expect(sut, toCompleteWith: found(data), for: matchingURL)
+    }
+    
     // MARK: - Helpers
     
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> CoreDataFeedStore {
@@ -46,7 +58,12 @@ final class CoreDataFeedImageDataStoreTests: XCTestCase {
             switch (receivedResult, expectedResult) {
                 case let (.success(receivedData), .success(expectedData)):
                     
-                    XCTAssertEqual(receivedData, expectedData)
+                    XCTAssertEqual(
+                        receivedData,
+                        expectedData,
+                        file: file,
+                        line: line
+                    )
                     
                 default:
                     XCTFail(
@@ -86,7 +103,16 @@ final class CoreDataFeedImageDataStoreTests: XCTestCase {
         return .success(.none)
     }
     
-    private func localImage(url: URL) -> LocalFeedImage {
-        return LocalFeedImage(id: UUID(), description: "any", location: "any", url: url)
+    private func found(_ data: Data) -> FeedImageDataStore.RetreivalResult {
+        return .success(data)
+    }
+    
+    private func localImage(url: URL, data: Data? = nil) -> LocalFeedImage {
+        return LocalFeedImage(
+            id: UUID(),
+            description: "any",
+            location: "any",
+            url: url
+        )
     }
 }
