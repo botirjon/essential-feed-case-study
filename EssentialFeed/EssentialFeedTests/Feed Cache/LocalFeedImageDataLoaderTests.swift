@@ -10,6 +10,8 @@ import EssentialFeed
 
 protocol FeedImageDataStore {
     
+    
+    
     typealias Result = Swift.Result<Data?, Error>
     typealias RetreiveCompletion = (Result) -> Void
     
@@ -30,11 +32,16 @@ private final class LocalFeedImageDataLoader: FeedImageDataLoader {
     
     enum Error: Swift.Error {
         case failed
+        case notFound
     }
     
     func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> any FeedImageDataLoaderTask {
-        store.retreive(dataForURL: url) { _ in
-            completion(.failure(Error.failed))
+        store.retreive(dataForURL: url) { result in
+            completion(result.mapError({ _ in
+                Error.failed
+            }).flatMap({ _ in
+                return .failure(Error.notFound)
+            }))
         }
         return Task()
     }
@@ -63,6 +70,14 @@ final class LocalFeedImageDataLoaderTests: XCTestCase {
         expect(sut, toCompleteWith: failed()) {
             let retreivalError = anyNSError()
             store.completeRetreival(with: retreivalError)
+        }
+    }
+    
+    func test_loadImageDataFromURL_deliversNotFoundErrorOnNotFound() {
+        let (sut, store) = makeSUT()
+        
+        expect(sut, toCompleteWith: notFound()) {
+            store.completeRetreival(with: .none)
         }
     }
     
@@ -120,6 +135,10 @@ final class LocalFeedImageDataLoaderTests: XCTestCase {
         return .failure(LocalFeedImageDataLoader.Error.failed)
     }
     
+    private func notFound() -> FeedImageDataLoader.Result {
+        return .failure(LocalFeedImageDataLoader.Error.notFound)
+    }
+    
     private class FeedImageDataStoreSpy: FeedImageDataStore {
         
         enum Message: Equatable {
@@ -127,7 +146,7 @@ final class LocalFeedImageDataLoaderTests: XCTestCase {
         }
         
         private(set) var receivedMessages = [Message]()
-        private var retereiveCompletions = [RetreiveCompletion]()
+        private var retreiveCompletions = [RetreiveCompletion]()
         
         
         func retreive(
@@ -135,11 +154,15 @@ final class LocalFeedImageDataLoaderTests: XCTestCase {
             completion: @escaping RetreiveCompletion
         ) {
             receivedMessages.append(.retreive(dataFor: url))
-            retereiveCompletions.append(completion)
+            retreiveCompletions.append(completion)
         }
         
         func completeRetreival(with error: NSError, at index: Int = 0) {
-            retereiveCompletions[index](.failure(error))
+            retreiveCompletions[index](.failure(error))
+        }
+        
+        func completeRetreival(with data: Data?, at index: Int = 0) {
+            retreiveCompletions[index](.success(data))
         }
     }
 }
