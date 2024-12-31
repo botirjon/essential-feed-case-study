@@ -7,9 +7,30 @@
 
 import Foundation
 
-public final class LocalFeedImageDataLoader: FeedImageDataLoader {
+public final class LocalFeedImageDataLoader {
+    let store: FeedImageDataStore
     
-    private final class Task: FeedImageDataLoaderTask {
+    public init(store: FeedImageDataStore) {
+        self.store = store
+    }
+}
+
+extension LocalFeedImageDataLoader {
+    
+    public typealias SaveResult = Swift.Result<Void, LoadError>
+    
+    public func save(
+        _ data: Data,
+        for url: URL,
+        completion: @escaping (SaveResult) -> Void
+    ) {
+        store.insert(data, for: url) { _ in }
+    }
+}
+
+extension LocalFeedImageDataLoader: FeedImageDataLoader {
+    
+    private final class LoadImageDataTask: FeedImageDataLoaderTask {
         private var completion: ((FeedImageDataLoader.Result) -> Void)?
         
         init(_ completion: @escaping (FeedImageDataLoader.Result) -> Void) {
@@ -29,30 +50,20 @@ public final class LocalFeedImageDataLoader: FeedImageDataLoader {
         }
     }
     
-    let store: FeedImageDataStore
-    
-    public init(store: FeedImageDataStore) {
-        self.store = store
-    }
-    
-    public enum Error: Swift.Error {
+    public enum LoadError: Swift.Error {
         case failed
         case notFound
     }
     
-    public func save(_ data: Data, for url: URL) {
-        store.insert(data, for: url) { _ in }
-    }
-    
     public func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> any FeedImageDataLoaderTask {
-        let task = Task(completion)
+        let task = LoadImageDataTask(completion)
         store.retreive(dataForURL: url) { [weak self] result in
             guard self != nil else { return }
             
             task.complete(with: result.mapError({ _ in
-                Error.failed
+                LoadError.failed
             }).flatMap({ data in
-                return data.map { .success($0) } ?? .failure(Error.notFound)
+                return data.map { .success($0) } ?? .failure(LoadError.notFound)
             }))
         }
         return task

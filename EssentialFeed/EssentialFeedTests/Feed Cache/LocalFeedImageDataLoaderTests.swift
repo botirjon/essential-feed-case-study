@@ -89,7 +89,7 @@ final class LocalFeedImageDataLoaderTests: XCTestCase {
         let (sut, store) = makeSUT()
         
         
-        sut.save(data, for: url)
+        sut.save(data, for: url) { _ in }
         
         XCTAssertEqual(store.receivedMessages, [.insert(data, url: url)])
     }
@@ -124,8 +124,8 @@ final class LocalFeedImageDataLoaderTests: XCTestCase {
                     XCTAssertEqual(receivedError, expectedError, file: file, line: line)
                     
                 case let (
-                    .failure(receivedError as LocalFeedImageDataLoader.Error),
-                    .failure(expectedError as LocalFeedImageDataLoader.Error)
+                    .failure(receivedError as LocalFeedImageDataLoader.LoadError),
+                    .failure(expectedError as LocalFeedImageDataLoader.LoadError)
                 ):
                     XCTAssertEqual(receivedError, expectedError, file: file, line: line)
                     
@@ -145,11 +145,11 @@ final class LocalFeedImageDataLoaderTests: XCTestCase {
     }
     
     private func failed() -> FeedImageDataLoader.Result {
-        return .failure(LocalFeedImageDataLoader.Error.failed)
+        return .failure(LocalFeedImageDataLoader.LoadError.failed)
     }
     
     private func notFound() -> FeedImageDataLoader.Result {
-        return .failure(LocalFeedImageDataLoader.Error.notFound)
+        return .failure(LocalFeedImageDataLoader.LoadError.notFound)
     }
     
     private class FeedImageDataStoreSpy: FeedImageDataStore {
