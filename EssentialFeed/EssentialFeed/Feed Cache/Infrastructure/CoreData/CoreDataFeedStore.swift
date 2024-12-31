@@ -48,7 +48,7 @@ public final class CoreDataFeedStore: FeedStore {
         }
     }
     
-    public func retreive(completion: @escaping RetreiveCompletion) {
+    public func retreive(completion: @escaping FeedStore.RetreiveCompletion) {
         perform { context in
             completion(Result {
                 try ManagedCache.find(in: context).map {
