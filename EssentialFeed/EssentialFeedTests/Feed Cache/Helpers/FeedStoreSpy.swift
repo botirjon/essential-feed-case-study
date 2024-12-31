@@ -69,12 +69,4 @@ class FeedStoreSpy: FeedStore {
             .success(CachedFeed(feed: feed, timestamp: timestamp))
         )
     }
-    
-    func completeRetreival(with error: NSError, timestamp: Date, at index: Int = 0) {
-        retreiveCompletions[index](.failure(error))
-    }
-    
-    func completeRetrievalWithEmptyCache(at index: Int = 0) {
-        retreiveCompletions[index](.success(.none))
-    }
 }
