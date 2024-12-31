@@ -87,7 +87,7 @@ extension LocalFeedLoader {
                     cache.timestamp,
                     against: currentDate()
                 ):
-                    self.store.deleteCachedFeed { _ in completion(.success(()))}
+                    self.store.deleteCachedFeed(completion: completion)
                     
                 case .success:
                     completion(.success(()))
