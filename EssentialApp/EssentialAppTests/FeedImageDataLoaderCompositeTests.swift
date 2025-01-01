@@ -34,7 +34,8 @@ final class FeedImageDataLoaderWithFallbackComposite: FeedImageDataLoader {
                     break
                     
                 case .failure:
-                    _ = self?.fallback.loadImageData(from: url) { _ in }
+                    task.wrapped = self?.fallback
+                        .loadImageData(from: url) { _ in }
             }
         }
         return task
@@ -82,6 +83,19 @@ final class FeedImageDataLoaderCompositeTests: XCTestCase {
         
         XCTAssertEqual(primaryLoader.cancelledURLs, [url])
         XCTAssertTrue(fallbackLoader.cancelledURLs.isEmpty)
+    }
+    
+    func test_cancelImageLoad_cancelsFallbackLoaderTaskAfterPrimaryLoaderFailure() {
+        let url = anyURL()
+        let (sut, primaryLoader, fallbackLoader) = makeSUT()
+        
+        let task = sut.loadImageData(from: url) { _ in }
+        
+        primaryLoader.complete(with: anyNSError())
+        task.cancel()
+        
+        XCTAssertTrue(primaryLoader.cancelledURLs.isEmpty)
+        XCTAssertEqual(fallbackLoader.cancelledURLs, [url])
     }
     
     // MARK: - Helpers
