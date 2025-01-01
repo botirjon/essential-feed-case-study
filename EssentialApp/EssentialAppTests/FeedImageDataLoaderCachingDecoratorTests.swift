@@ -18,8 +18,7 @@ private final class FeedImageDataLoaderCachingDecorator: FeedImageDataLoader {
     }
     
     func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> any EssentialFeed.FeedImageDataLoaderTask {
-        let task = decoratee.loadImageData(from: url, completion: completion)
-        return task
+        return decoratee.loadImageData(from: url, completion: completion)
     }
 }
 
