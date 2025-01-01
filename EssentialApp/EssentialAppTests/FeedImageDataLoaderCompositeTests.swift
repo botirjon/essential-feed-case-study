@@ -109,12 +109,6 @@ final class FeedImageDataLoaderCompositeTests: XCTestCase {
         return (sut, primaryLoader, fallbackLoader)
     }
     
-    private func trackForMemoryLeaks(_ object: AnyObject, file: StaticString = #filePath, line: UInt = #line) {
-        addTeardownBlock { [weak object] in
-            XCTAssertNil(object, "Instance should have been deallocated, potential memory leak!", file: file, line: line)
-        }
-    }
-    
     private func expect(_ sut: FeedImageDataLoader, toCompleteWith expectedResult: FeedImageDataLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "Wait for image data load completion")
         

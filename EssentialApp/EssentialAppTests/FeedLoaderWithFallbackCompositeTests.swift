@@ -74,12 +74,6 @@ final class FeedLoaderWithFallbackCompositeTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
     
-    private func trackForMemoryLeaks(_ object: AnyObject, file: StaticString = #filePath, line: UInt = #line) {
-        addTeardownBlock { [weak object] in
-            XCTAssertNil(object, "Instance should have been deallocated. Potential memory leak.", file: file, line: line)
-        }
-    }
-    
     private func uniqueFeed() -> [FeedImage] {
         return [FeedImage(id: UUID(), description: "a description", location: "a location", url: URL(string: "https://any-url.com")!)]
     }
