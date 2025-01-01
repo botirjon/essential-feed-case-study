@@ -26,16 +26,14 @@ private final class FeedImageDataLoaderCachingDecorator: FeedImageDataLoader {
 final class FeedImageDataLoaderCachingDecoratorTests: XCTestCase {
     
     func test_init_doesNotLoadImageData() {
-        let loader = FeedImageDataLoaderSpy()
-        _ = FeedImageDataLoaderCachingDecorator(decoratee: loader)
+        let (_, loader) = makeSUT()
         
         XCTAssertTrue(loader.loadedURLs.isEmpty)
     }
     
     func test_loadImageData_loadsFromURL() {
         let url = anyURL()
-        let loader = FeedImageDataLoaderSpy()
-        let sut = FeedImageDataLoaderCachingDecorator(decoratee: loader)
+        let (sut, loader) = makeSUT()
         
         _ = sut.loadImageData(from: url) { _ in }
         
@@ -44,12 +42,21 @@ final class FeedImageDataLoaderCachingDecoratorTests: XCTestCase {
     
     func test_cancelImageDataLoad_cancelsTask() {
         let url = anyURL()
-        let loader = FeedImageDataLoaderSpy()
-        let sut = FeedImageDataLoaderCachingDecorator(decoratee: loader)
+        let (sut, loader) = makeSUT()
         
         let task = sut.loadImageData(from: url) { _ in }
         task.cancel()
         
         XCTAssertEqual(loader.cancelledURLs, [url])
+    }
+    
+    // MARK: - Helpers
+    
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedImageDataLoader, loader: FeedImageDataLoaderSpy) {
+        let loader = FeedImageDataLoaderSpy()
+        let sut = FeedImageDataLoaderCachingDecorator(decoratee: loader)
+        trackForMemoryLeaks(loader, file: file, line: line)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        return (sut, loader)
     }
 }
