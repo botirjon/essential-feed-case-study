@@ -31,10 +31,10 @@ private final class FeedImageDataLoaderCachingDecorator: FeedImageDataLoader {
     
     func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> any EssentialFeed.FeedImageDataLoaderTask {
         return decoratee.loadImageData(from: url) { [weak self] result in
-            if let data = try? result.get() {
+            completion(result.map({ data in
                 self?.cache.save(data, for: url) { _ in }
-            }
-            completion(result)
+                return data
+            }))
         }
     }
 }
