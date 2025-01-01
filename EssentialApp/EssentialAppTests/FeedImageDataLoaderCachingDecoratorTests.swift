@@ -24,6 +24,7 @@ private final class FeedImageDataLoaderCachingDecorator: FeedImageDataLoader {
     }
     
     func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> any EssentialFeed.FeedImageDataLoaderTask {
+        _ = decoratee.loadImageData(from: url) { _ in }
         return Task()
     }
 }
@@ -35,5 +36,15 @@ final class FeedImageDataLoaderCachingDecoratorTests: XCTestCase {
         _ = FeedImageDataLoaderCachingDecorator(decoratee: loader)
         
         XCTAssertTrue(loader.loadedURLs.isEmpty)
+    }
+    
+    func test_loadImageData_loadsFromURL() {
+        let url = anyURL()
+        let loader = FeedImageDataLoaderSpy()
+        let sut = FeedImageDataLoaderCachingDecorator(decoratee: loader)
+        
+        _ = sut.loadImageData(from: url) { _ in }
+        
+        XCTAssertEqual(loader.loadedURLs, [url])
     }
 }
