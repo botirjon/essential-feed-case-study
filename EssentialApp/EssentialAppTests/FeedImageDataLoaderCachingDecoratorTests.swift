@@ -9,16 +9,6 @@
 import XCTest
 import EssentialFeed
 
-protocol FeedImageDataCaching {
-    typealias Result = Swift.Result<Void, Error>
-    
-    func save(
-        _ data: Data,
-        for url: URL,
-        completion: @escaping (Result) -> Void
-    )
-}
-
 private final class FeedImageDataLoaderCachingDecorator: FeedImageDataLoader {
     
     private let decoratee: FeedImageDataLoader
@@ -106,6 +96,18 @@ final class FeedImageDataLoaderCachingDecoratorTests: XCTestCase, FeedImageDataL
         
         XCTAssertTrue(cache.messages.isEmpty)
     }
+    
+//    func test_cancelImageDataLoad_doesNotCache() {
+//        let cache = FeedImageDataCacheSpy()
+//        let (sut, loader) = makeSUT(cache: cache)
+//        
+//        let task = sut.loadImageData(from: anyURL()) { _ in }
+//        
+//        task.cancel()
+//        loader.complete(with: anyData())
+//        
+//        XCTAssertTrue(cache.messages.isEmpty)
+//    }
     
     // MARK: - Helpers
     
