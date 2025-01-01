@@ -10,9 +10,11 @@ import EssentialFeed
 
 final class FeedImageDataLoaderWithFallbackComposite: FeedImageDataLoader {
     let primary: FeedImageDataLoader
+    let fallback: FeedImageDataLoader
     
     init(primary: FeedImageDataLoader, fallback: FeedImageDataLoader) {
         self.primary = primary
+        self.fallback = fallback
     }
     
     private class Task: FeedImageDataLoaderTask {
@@ -22,7 +24,15 @@ final class FeedImageDataLoaderWithFallbackComposite: FeedImageDataLoader {
     }
     
     func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> any EssentialFeed.FeedImageDataLoaderTask {
-        _ = primary.loadImageData(from: url) { _ in }
+        _ = primary.loadImageData(from: url) { [weak self] result in
+            switch result {
+                case .success:
+                    break
+                    
+                case .failure:
+                    _ = self?.fallback.loadImageData(from: url) { _ in }
+            }
+        }
         return Task()
     }
 }
@@ -44,6 +54,18 @@ final class FeedImageDataLoaderCompositeTests: XCTestCase {
         
         XCTAssertEqual(primaryLoader.loadedURLs, [url])
         XCTAssertTrue(fallbackLoader.loadedURLs.isEmpty)
+    }
+    
+    func test_loadImageData_loadsFromFallbackLoaderOnPrimaryLoaderFailure() {
+        let url = anyURL()
+        let (sut, primaryLoader, fallbackLoader) = makeSUT()
+        
+        _ = sut.loadImageData(from: url) { _ in }
+        
+        primaryLoader.complete(with: anyNSError())
+        
+        XCTAssertEqual(primaryLoader.loadedURLs, [url])
+        XCTAssertEqual(fallbackLoader.loadedURLs, [url])
     }
     
     // MARK: - Helpers
@@ -72,9 +94,17 @@ final class FeedImageDataLoaderCompositeTests: XCTestCase {
         return URL(string: "https://any-url.com")!
     }
     
+    private func anyNSError() -> NSError {
+        return NSError(domain: "any error", code: 0)
+    }
+    
     private class LoaderSpy: FeedImageDataLoader {
         
-        private(set) var loadedURLs = [URL]()
+        private var messages = [(url: URL, completion: (FeedImageDataLoader.Result) -> Void)]()
+        
+        var loadedURLs: [URL] {
+            messages.map { $0.url }
+        }
         
         private class Task: FeedImageDataLoaderTask {
             func cancel() {
@@ -83,8 +113,12 @@ final class FeedImageDataLoaderCompositeTests: XCTestCase {
         }
         
         func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> any EssentialFeed.FeedImageDataLoaderTask {
-            loadedURLs.append(url)
+            messages.append((url, completion))
             return Task()
+        }
+        
+        func complete(with error: Error, at index: Int = 0) {
+            messages[index].completion(.failure(error))
         }
     }
 }
