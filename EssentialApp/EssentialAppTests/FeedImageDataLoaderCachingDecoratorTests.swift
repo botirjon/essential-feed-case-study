@@ -17,15 +17,9 @@ private final class FeedImageDataLoaderCachingDecorator: FeedImageDataLoader {
         self.decoratee = decoratee
     }
     
-    private class Task: EssentialFeed.FeedImageDataLoaderTask {
-        func cancel() {
-            
-        }
-    }
-    
     func loadImageData(from url: URL, completion: @escaping (FeedImageDataLoader.Result) -> Void) -> any EssentialFeed.FeedImageDataLoaderTask {
-        _ = decoratee.loadImageData(from: url) { _ in }
-        return Task()
+        let task = decoratee.loadImageData(from: url) { _ in }
+        return task
     }
 }
 
@@ -46,5 +40,16 @@ final class FeedImageDataLoaderCachingDecoratorTests: XCTestCase {
         _ = sut.loadImageData(from: url) { _ in }
         
         XCTAssertEqual(loader.loadedURLs, [url])
+    }
+    
+    func test_cancelImageDataLoad_cancelsTask() {
+        let url = anyURL()
+        let loader = FeedImageDataLoaderSpy()
+        let sut = FeedImageDataLoaderCachingDecorator(decoratee: loader)
+        
+        let task = sut.loadImageData(from: url) { _ in }
+        task.cancel()
+        
+        XCTAssertEqual(loader.cancelledURLs, [url])
     }
 }
