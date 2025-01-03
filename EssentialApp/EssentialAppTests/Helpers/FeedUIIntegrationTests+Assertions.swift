@@ -7,6 +7,7 @@
 
 import EssentialFeediOS
 import EssentialFeed
+import XCTest
 
 extension FeedUIIntegrationTests {
     func assertThat(

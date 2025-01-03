@@ -8,11 +8,11 @@
 import Foundation
 import EssentialFeed
 
-protocol FeedLoadingView {
+public protocol FeedLoadingView {
     func display(viewModel: FeedLoadingViewModel)
 }
 
-protocol FeedView {
+public protocol FeedView {
     func display(viewModel: FeedViewModel)
 }
 
@@ -20,12 +20,12 @@ public final class FeedPresenter {
     private let loadingView: FeedLoadingView
     private let feedView: FeedView
     
-    init(loadingView: FeedLoadingView, feedView: FeedView) {
+    public init(loadingView: FeedLoadingView, feedView: FeedView) {
         self.loadingView = loadingView
         self.feedView = feedView
     }
     
-    static var title: String {
+    public static var title: String {
         return NSLocalizedString(
             "FEED_VIEW_TITLE",
             tableName: "Feed",
@@ -34,16 +34,16 @@ public final class FeedPresenter {
         )
     }
     
-    func didStartLoadingFeed() {
+    public func didStartLoadingFeed() {
         loadingView.display(viewModel: FeedLoadingViewModel(isLoading: true))
     }
     
-    func didFinishLoadingFeed(with feed: [FeedImage]) {
+    public func didFinishLoadingFeed(with feed: [FeedImage]) {
         feedView.display(viewModel: FeedViewModel(feed: feed))
         loadingView.display(viewModel: FeedLoadingViewModel(isLoading: false))
     }
     
-    func didFinishLoadingFeed(with error: Error) {
+    public func didFinishLoadingFeed(with error: Error) {
         loadingView.display(viewModel: FeedLoadingViewModel(isLoading: false))
     }
 }

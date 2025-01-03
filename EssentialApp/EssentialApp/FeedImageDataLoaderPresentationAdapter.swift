@@ -6,6 +6,7 @@
 //
 
 import EssentialFeed
+import EssentialFeediOS
 
 final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, Image>: FeedImageCellControllerDelegate where View.Image == Image {
     private let model: FeedImage
@@ -14,7 +15,7 @@ final class FeedImageDataLoaderPresentationAdapter<View: FeedImageView, Image>: 
     
     var presenter: FeedImagePresenter<View, Image>?
     
-    init(model: FeedImage, imageLoader: FeedImageDataLoader) {
+    public init(model: FeedImage, imageLoader: FeedImageDataLoader) {
         self.model = model
         self.imageLoader = imageLoader
     }
