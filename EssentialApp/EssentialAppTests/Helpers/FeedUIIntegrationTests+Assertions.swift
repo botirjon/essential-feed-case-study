@@ -20,7 +20,9 @@ extension FeedUIIntegrationTests {
         
         guard feed.count == sut.numberOfRenderedFeedImageViews() else {
             XCTFail(
-                "Expected \(feed.count) images, got \(sut.numberOfRenderedFeedImageViews()) instead"
+                "Expected \(feed.count) images, got \(sut.numberOfRenderedFeedImageViews()) instead",
+                file: file,
+                line: line
             )
             return
         }
@@ -39,8 +41,6 @@ extension FeedUIIntegrationTests {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        sut.view.enforceLayoutCycle()
-        
         let view = sut.feedImageView(at: index)
         
         guard let cell = view as? FeedImageCell else {
@@ -67,8 +67,6 @@ extension FeedUIIntegrationTests {
             file: file,
             line: line
         )
-        
-        executeRunLoopToCleanUpReferences()
     }
     
     private func executeRunLoopToCleanUpReferences() {

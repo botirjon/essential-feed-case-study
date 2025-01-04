@@ -35,19 +35,19 @@ final class FeedUIIntegrationTests: XCTestCase {
     }
     
     func test_loadingFeedIndicator_isVisibleWhileLoadingFeed() {
-//        let (sut, loader) = makeSUT()
-//        
-//        sut.simulateViewAppearance()
-//        XCTAssertEqual(sut.isShowingLoadingIndicator, true)
-//        
-//        loader.completeFeedLoading(at: 0)
-//        XCTAssertEqual(sut.isShowingLoadingIndicator, false)
-//    
-//        sut.simulateUserInitiatedFeedReload()
-//        XCTAssertEqual(sut.isShowingLoadingIndicator, true)
-//        
-//        loader.completeFeedLoadingWithError(at: 1)
-//        XCTAssertEqual(sut.isShowingLoadingIndicator, false)
+        let (sut, loader) = makeSUT()
+        
+        sut.simulateViewAppearance()
+        XCTAssertEqual(sut.isShowingLoadingIndicator, true)
+        
+        loader.completeFeedLoading(at: 0)
+        XCTAssertEqual(sut.isShowingLoadingIndicator, false)
+    
+        sut.simulateUserInitiatedFeedReload()
+        XCTAssertEqual(sut.isShowingLoadingIndicator, true)
+        
+        loader.completeFeedLoadingWithError(at: 1)
+        XCTAssertEqual(sut.isShowingLoadingIndicator, false)
     }
     
     func test_loadFeedCompletion_rendersSuccessfullyLoadedFeed() {
@@ -57,7 +57,7 @@ final class FeedUIIntegrationTests: XCTestCase {
         let image3 = makeImage(description: nil, location: nil)
         let (sut, loader) = makeSUT()
         
-        sut.loadViewIfNeeded()
+        sut.simulateViewAppearance()
         assertThat(sut, isRendering: [])
         
         sut.simulateViewAppearance()
@@ -65,7 +65,7 @@ final class FeedUIIntegrationTests: XCTestCase {
         assertThat(sut, isRendering: [image0])
         
         sut.simulateUserInitiatedFeedReload()
-        loader.completeFeedLoading(with: [image0, image1, image2, image3])
+        loader.completeFeedLoading(with: [image0, image1, image2, image3], at: 1)
         assertThat(sut, isRendering: [image0, image1, image2, image3])
     }
     
@@ -79,7 +79,7 @@ final class FeedUIIntegrationTests: XCTestCase {
         assertThat(sut, isRendering: [image0, image1])
         
         sut.simulateUserInitiatedFeedReload()
-        loader.completeFeedLoading(with: [])
+        loader.completeFeedLoading(with: [], at: 1)
         assertThat(sut, isRendering: [])
     }
     

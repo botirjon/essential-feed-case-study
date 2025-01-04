@@ -64,6 +64,14 @@ public final class FeedViewController: UITableViewController, UITableViewDataSou
         }
     }
     
+    deinit {
+        loadingControllers.forEach { (indexPath: IndexPath, loadingController: FeedImageCellController) in
+            loadingController.cancelLoad()
+        }
+        
+        loadingControllers = [:]
+    }
+    
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tableModel.count
     }
