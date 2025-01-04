@@ -21,5 +21,7 @@
 	</dict>
     <key>ITSAppUsesNonExemptEncryption</key>
     <false/>
+    <key>CFBundleVersion</key>
+    <string>1</string>
 </dict>
 </plist>
