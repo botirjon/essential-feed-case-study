@@ -8,7 +8,7 @@
 	<string>app-store-connect</string>
 	<key>provisioningProfiles</key>
 	<dict>
-		<key>com.learning.me.EssentialAppCaseStudy</key>
+		<key>com.learning.me.EssentialFeedCaseStudy</key>
 		<string>Essential Feed Case Study Mobile Provisioning</string>
 	</dict>
 	<key>signingCertificate</key>
