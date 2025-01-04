@@ -60,8 +60,7 @@ final class FeedUIIntegrationTests: XCTestCase {
         sut.loadViewIfNeeded()
         assertThat(sut, isRendering: [])
         
-        sut.beginAppearanceTransition(true, animated: false)
-        sut.endAppearanceTransition()
+        sut.simulateViewAppearance()
         loader.completeFeedLoading(with: [image0], at: 0)
         assertThat(sut, isRendering: [image0])
         
@@ -345,8 +344,8 @@ final class FeedUIIntegrationTests: XCTestCase {
                 feedLoader: loader.loadPublisher,
                 imageLoader: loader.loadImageDataPublisher(from:)
             )
-            trackForMemoryLeaks(loader, file: file, line: line)
             trackForMemoryLeaks(sut, file: file, line: line)
+            trackForMemoryLeaks(loader, file: file, line: line)
             return (sut, loader)
     }
     

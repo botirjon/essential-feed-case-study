@@ -29,7 +29,7 @@ extension FeedUIIntegrationTests {
             assertThat(sut, hasViewConfiguredFor: image, at: index,  file: file, line: line)
         }
         
-        RunLoop.current.run(until: Date())
+        executeRunLoopToCleanUpReferences()
     }
     
     func assertThat(
@@ -39,6 +39,8 @@ extension FeedUIIntegrationTests {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
+        sut.view.enforceLayoutCycle()
+        
         let view = sut.feedImageView(at: index)
         
         guard let cell = view as? FeedImageCell else {
@@ -65,5 +67,11 @@ extension FeedUIIntegrationTests {
             file: file,
             line: line
         )
+        
+        executeRunLoopToCleanUpReferences()
+    }
+    
+    private func executeRunLoopToCleanUpReferences() {
+        RunLoop.current.run(until: Date())
     }
 }
