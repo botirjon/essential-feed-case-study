@@ -12,7 +12,6 @@
 		080EDF0E21B6DCB600813479 /* FeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080EDF0D21B6DCB600813479 /* FeedLoader.swift */; };
 		60202ECD2D12D28C003F0306 /* EssentialFeediOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60202EC32D12D28C003F0306 /* EssentialFeediOS.framework */; };
 		60202EF32D12E460003F0306 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; platformFilter = ios; };
-		60202EF42D12E460003F0306 /* EssentialFeed.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 080EDEF121B6DA7E00813479 /* EssentialFeed.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		60202EF82D12E593003F0306 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D364BE2D06029C00D823BF /* XCTestCase+MemoryLeakTracking.swift */; };
 		6042DBA52D21C16300173627 /* LoadFeedImageDataFromRemoteUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6042DBA42D21C15900173627 /* LoadFeedImageDataFromRemoteUseCaseTests.swift */; };
 		6042DBA72D22D80000173627 /* FeedImageDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6042DBA62D22D80000173627 /* FeedImageDataLoader.swift */; };
@@ -118,20 +117,6 @@
 			remoteInfo = EssentialFeed;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		60202EF72D12E460003F0306 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				60202EF42D12E460003F0306 /* EssentialFeed.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		080EDEF121B6DA7E00813479 /* EssentialFeed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialFeed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -539,7 +524,6 @@
 				60202EBF2D12D28C003F0306 /* Sources */,
 				60202EC02D12D28C003F0306 /* Frameworks */,
 				60202EC12D12D28C003F0306 /* Resources */,
-				60202EF72D12E460003F0306 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1042,7 +1026,7 @@
 					"@loader_path/Frameworks",
 				);
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
-				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeed;
+				PRODUCT_BUNDLE_IDENTIFIER = com.learning.me.EssentialFeed;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "macosx iphonesimulator iphoneos";
@@ -1074,7 +1058,7 @@
 					"@loader_path/Frameworks",
 				);
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
-				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeed;
+				PRODUCT_BUNDLE_IDENTIFIER = com.learning.me.EssentialFeed;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "macosx iphonesimulator iphoneos";
@@ -1096,7 +1080,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeedTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.learning.me.EssentialFeedTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1119,7 +1103,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.essentialdeveloper.EssentialFeedTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.learning.me.EssentialFeedTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator";
 				SWIFT_VERSION = 5.0;
